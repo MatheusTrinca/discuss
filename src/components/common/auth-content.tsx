@@ -1,4 +1,5 @@
-import { auth } from '@/auth';
+'use client';
+
 import {
   Avatar,
   Button,
@@ -8,15 +9,20 @@ import {
   PopoverTrigger,
 } from '@nextui-org/react';
 import * as actions from '@/actions';
+import { useSession } from 'next-auth/react';
 
-export default async function AuthContent() {
-  const session = await auth();
+export default function AuthContent() {
+  const session = useSession();
 
-  if (session?.user) {
+  if (session.status === 'loading') {
+    return null;
+  }
+
+  if (session.data?.user) {
     return (
       <Popover placement="left">
         <PopoverTrigger>
-          <Avatar src={session.user.image || ''} />
+          <Avatar src={session.data?.user.image || ''} />
         </PopoverTrigger>
         <PopoverContent>
           <div className="py-4">

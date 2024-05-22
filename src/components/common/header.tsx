@@ -6,7 +6,7 @@ import {
   NavbarItem,
 } from '@nextui-org/react';
 import Link from 'next/link';
-import AuthContent from './AuthContent';
+import AuthContent from './auth-content';
 
 export default async function Header() {
   return (

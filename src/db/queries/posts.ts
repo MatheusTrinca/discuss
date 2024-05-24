@@ -41,3 +41,58 @@ export async function fetchPostsByTopicSlug(
     },
   });
 }
+
+export async function fetchTopPosts(): Promise<PostsWithData[]> {
+  return db.post.findMany({
+    include: {
+      topic: {
+        select: {
+          slug: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+    orderBy: {
+      comments: {
+        _count: 'desc',
+      },
+    },
+    take: 5,
+  });
+}
+
+export async function fetchPostsBySearchTerm(
+  term: string
+): Promise<PostsWithData[]> {
+  return db.post.findMany({
+    where: {
+      OR: [{ title: { contains: term } }, { content: { contains: term } }],
+    },
+    include: {
+      topic: {
+        select: {
+          slug: true,
+        },
+      },
+      user: {
+        select: {
+          name: true,
+        },
+      },
+      _count: {
+        select: {
+          comments: true,
+        },
+      },
+    },
+  });
+}
